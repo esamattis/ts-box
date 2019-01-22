@@ -57,12 +57,13 @@ function boxit<ReturnValue>(
 
 function boxify<FN extends (...args: any[]) => any>(
     fn: FN,
+    context: any = null,
 ): (
     ...args: Parameters<FN>
 ) => WrapPromise<FN, ResultBox<UnwrapPromise<ReturnType<FN>>>> {
     const ret = (...args: any[]) => {
         return boxit(() => {
-            return fn(...args);
+            return fn.apply(context, args);
         });
     };
 
