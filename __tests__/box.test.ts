@@ -1,4 +1,5 @@
 import {runBox} from "../src/box";
+import {boxify} from "../lib/box";
 
 test("sync success", () => {
     expect.assertions(1);
@@ -57,6 +58,24 @@ test("async fail", async () => {
 
         throw new Error("fail");
     });
+
+    if (box.ok) {
+        console.log(box.value);
+    } else {
+        expect(box.error.message).toBe("fail");
+    }
+});
+
+test("can boxify existing function", async () => {
+    function ding(foo: string) {
+        throw new Error("fail");
+    }
+
+    const boxedDing = boxify(ding);
+
+    const box = boxedDing("foo");
+
+    expect.assertions(1);
 
     if (box.ok) {
         console.log(box.value);

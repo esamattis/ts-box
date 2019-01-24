@@ -1,4 +1,4 @@
-import {runBox} from "../src/box";
+import {runBox, boxify} from "../src/box";
 
 test("cannot access without if-statement", () => {
     const box = runBox(() => {
@@ -10,4 +10,13 @@ test("cannot access without if-statement", () => {
 
     // $ExpectError
     console.error(box.error);
+});
+
+test("can boxify existing function", async () => {
+    function ding(foo: number) {}
+
+    const boxedDing = boxify(ding);
+
+    // $ExpectError
+    const box = boxedDing("foo");
 });
