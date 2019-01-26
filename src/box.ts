@@ -1,4 +1,4 @@
-type ResultBox<T> = {ok: true; value: T} | {ok: false; error: any};
+export type ResultBox<T> = {ok: true; value: T} | {ok: false; error: any};
 
 type BoxPromise<T> = T extends Promise<infer V>
     ? ResultBox<Promise<V>>
