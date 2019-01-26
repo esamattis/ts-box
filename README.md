@@ -67,3 +67,11 @@ type ResultBox<T> = {ok: true; value: T} | {ok: false; error: any};
 Read more about the TypeScript discriminated unions here:
 
 <https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions>
+
+## FAQ
+
+Q: Can I somehow type the error to other than `any`?
+
+A: No for the same reason the error is always `any` try-catch statements:
+There's no way to guarantee the type of it since anything can throw at any
+point. You must use type guards to narrow the error type.
