@@ -4,16 +4,28 @@ type BoxPromise<T> = T extends Promise<infer V>
     ? ResultBox<Promise<V>>
     : ResultBox<T>;
 
-type UnwrapPromise<T> = T extends Promise<infer V> ? V : T;
+/** Get the type wrapped in promise */
+type PromiseType<T> = T extends Promise<infer V> ? V : T;
 
 /**
  * Wrap T in promise if Function FN is an async function
  */
-type WrapPromise<FN extends (...args: any[]) => any, T> = FN extends (
+type WrapPromiseIf<FN extends (...args: any[]) => any, T> = FN extends (
     ...args: any[]
 ) => Promise<any>
     ? Promise<T>
     : T;
+
+/** Put function return value in to a box */
+type BoxifyReturnType<FN extends (...args: any[]) => any> = WrapPromiseIf<
+    FN,
+    ResultBox<PromiseType<ReturnType<FN>>>
+>;
+
+/** Convert function to boxified function */
+type BoxifyFunction<FN extends (...args: any[]) => any> = (
+    ...args: Parameters<FN>
+) => BoxifyReturnType<FN>;
 
 function isPromise<T = any>(v: any): v is Promise<T> {
     return v && typeof v.then === "function";
@@ -58,9 +70,7 @@ export function runBox<ReturnValue>(
 export function boxify<FN extends (...args: any[]) => any>(
     fn: FN,
     context: any = null,
-): (
-    ...args: Parameters<FN>
-) => WrapPromise<FN, ResultBox<UnwrapPromise<ReturnType<FN>>>> {
+): BoxifyFunction<FN> {
     const ret = (...args: any[]) => {
         return runBox(() => {
             return fn.apply(context, args);
