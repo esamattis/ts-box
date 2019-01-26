@@ -132,3 +132,17 @@ test("can boxify object of functions", async () => {
         expect(fooAsync.value).toEqual(2);
     }
 });
+
+test("run box can pass arguments", () => {
+    expect.assertions(1);
+
+    function fun(arg1: number, arg2: string) {
+        return String(arg1) + arg2;
+    }
+
+    const box = runBox(fun, 1, "s");
+
+    if (box.ok) {
+        expect(box.value).toEqual("1s");
+    }
+});

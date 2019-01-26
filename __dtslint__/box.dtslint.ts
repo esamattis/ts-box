@@ -53,3 +53,17 @@ test("can boxify class objectg", async () => {
     // $ExpectType ResultBox<number>
     boxedFoo.ding();
 });
+
+test("run box can pass arguments", () => {
+    function fun(arg1: number, arg2: string) {
+        return 1;
+    }
+
+    const box = runBox(fun, 1, "s");
+
+    // $ExpectError
+    runBox(fun, 1);
+
+    // $ExpectError
+    runBox(fun, 1, 2);
+});

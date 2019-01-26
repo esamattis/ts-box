@@ -51,15 +51,16 @@ function boxError<T>(error: T) {
  *
  * @param fn
  */
-export function runBox<ReturnValue>(
-    fn: () => ReturnValue | Promise<ReturnValue>,
+export function runBox<ReturnValue, Args extends any[]>(
+    fn: (...args: Args) => ReturnValue | Promise<ReturnValue>,
+    ...fnArgs: Args
 ): BoxPromise<ReturnValue> {
     type Ret = BoxPromise<ReturnValue>;
 
     let res;
 
     try {
-        res = fn();
+        res = fn(...fnArgs);
     } catch (error) {
         // Sync error
         return boxError(error) as Ret;
