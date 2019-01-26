@@ -54,11 +54,11 @@ import Axiox from "axios";
 const BoxifiedAxios = boxifyObject(Axios);
 ```
 
-## The return type
+## The Return Type
 
-The return type of a boxified function is always a discriminated union
-`ResultBox` with a common `ok` singleton property as the discriminant which
-can be used to narrow the type to the value or error.
+In TypeScript jargon the return type of a boxified function is always a
+discriminated union `ResultBox` with a common `ok` singleton property as the
+discriminant which can be used to narrow the type to the value or error.
 
 ```ts
 type ResultBox<T> = {ok: true; value: T} | {ok: false; error: any};
