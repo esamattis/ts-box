@@ -1,5 +1,5 @@
 import {runBox} from "../src/box";
-import {boxify} from "../lib/box";
+import {boxify} from "../src/box";
 
 test("sync success", () => {
     expect.assertions(1);
