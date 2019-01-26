@@ -19,7 +19,7 @@ Use `boxify()` to boxify existing functions
 ```ts
 import {boxify} from "ts-box";
 
-// Make a version of fetch that never throws exceptions
+// Make a version of fetch that never throws or rejects
 const boxedFetch = boxify(fetch);
 
 async function main() {
