@@ -39,7 +39,7 @@ Use `runBox()` to immediately execute a function with boxing
 
 ```ts
 import {runBox} from "ts-box";
-const jsonBox = runBox(box.value.json);
+const jsonBox = runBox(() => box.value.json());
 if (jsonBox.ok) {
     // jsonBox.value...
 }
@@ -64,6 +64,6 @@ can be used to narrow the type to the value or error.
 type ResultBox<T> = {ok: true; value: T} | {ok: false; error: any};
 ```
 
-Read more about the TypeScript discriminated union here:
+Read more about the TypeScript discriminated unions here:
 
 <https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions>
