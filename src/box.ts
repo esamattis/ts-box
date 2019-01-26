@@ -27,6 +27,13 @@ type BoxifyFunction<FN extends (...args: any[]) => any> = (
     ...args: Parameters<FN>
 ) => BoxifyReturnType<FN>;
 
+/** Convert all functions in a object to boxified functions */
+type BoxifyObject<T extends Object> = {
+    [K in keyof T]: T[K] extends (...args: any[]) => any
+        ? BoxifyFunction<T[K]>
+        : T[K]
+};
+
 function isPromise<T = any>(v: any): v is Promise<T> {
     return v && typeof v.then === "function";
 }
@@ -67,7 +74,7 @@ export function runBox<ReturnValue>(
     }
 }
 
-export function boxify<FN extends (...args: any[]) => any>(
+function boxifyFunction<FN extends (...args: any[]) => any>(
     fn: FN,
     context: any = null,
 ): BoxifyFunction<FN> {
@@ -78,4 +85,56 @@ export function boxify<FN extends (...args: any[]) => any>(
     };
 
     return ret as any;
+}
+
+// Required to make class instances work. Borrowed from lodash
+// https://github.com/lodash/lodash/blob/6248f8a65861b506f2c106defe28619be5f45723/toPlainObject.js
+function toPlainObject(value: any) {
+    value = Object(value);
+    const result: any = {};
+    for (const key in value) {
+        result[key] = value[value];
+    }
+    return result;
+}
+
+function boxifyObject<T extends Object>(
+    object: T,
+    context?: any,
+): BoxifyObject<T> {
+    const out: {[key: string]: Function} = {};
+
+    Object.getOwnPropertyNames(toPlainObject(object)).forEach(key => {
+        if (key === "constructor") {
+            return;
+        }
+
+        const value = (object as any)[key];
+
+        if (typeof value === "function") {
+            out[key] = boxifyFunction(value, context || object);
+        } else {
+            out[key] = value;
+        }
+    });
+
+    return out as any;
+}
+
+export function boxify<FN extends (...args: any[]) => any>(
+    fn: FN,
+    context?: any,
+): BoxifyFunction<FN>;
+
+export function boxify<T extends Object>(
+    object: T,
+    context?: any,
+): BoxifyObject<T>;
+
+export function boxify(thing: any, context?: any): any {
+    if (typeof thing === "function") {
+        return boxifyFunction(thing, context);
+    }
+
+    return boxifyObject(thing);
 }

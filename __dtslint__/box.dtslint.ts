@@ -1,6 +1,7 @@
 import {runBox, boxify} from "../src/box";
 
 test("cannot access without if-statement", () => {
+    // $ExpectType ResultBox<number>
     const box = runBox(() => {
         return 3;
     });
@@ -19,4 +20,36 @@ test("can boxify existing function", async () => {
 
     // $ExpectError
     const box = boxedDing("foo");
+});
+
+test("can boxify object of functions", async () => {
+    const obj = {
+        foo() {
+            return 3;
+        },
+        async fooAsync() {
+            return 3;
+        },
+    };
+
+    const boxedObj = boxify(obj);
+
+    // $ExpectType ResultBox<number>
+    boxedObj.foo();
+
+    // $ExpectType Promise<ResultBox<number>>
+    boxedObj.fooAsync();
+});
+
+test("can boxify class objectg", async () => {
+    class Foo {
+        ding() {
+            return 1;
+        }
+    }
+
+    const boxedFoo = boxify(new Foo());
+
+    // $ExpectType ResultBox<number>
+    boxedFoo.ding();
 });
