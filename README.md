@@ -4,9 +4,9 @@ Put exceptions into boxes.
 
 In JavaScript and therefor in TypeScript any function can throw anything at
 any time. This makes exception handling hard. ts-box is a workaround which
-puts function return values into boxes (like a maybe monad) and forces users
-to check for the error at the type level before the actual value can be
-accessed.
+puts function return values into boxes (like a maybe monad or error
+container) and forces users to check for the error at the type level before
+the actual value can be accessed.
 
 ## Install
 
