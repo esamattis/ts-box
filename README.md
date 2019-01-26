@@ -25,12 +25,14 @@ const boxedFetch = boxify(fetch);
 async function main() {
     const box = await boxedFetch("/api");
 
+    box.value; // TypeError! Cannot access the value before the error is handled
+
     if (!box.ok) {
         console.log("Fetch failed", box.error);
         return;
     }
 
-    // The value can be accessed only when the error is handled
+    // The value can be now accessed when the error is handled
     console.log("Fetch ok!", box.value.status);
 }
 ```
