@@ -98,7 +98,7 @@ function toPlainObject(value: any) {
     return result;
 }
 
-function boxifyObject<T extends Object>(
+export function boxifyObject<T extends Object>(
     object: T,
     context?: any,
 ): BoxifyObject<T> {
