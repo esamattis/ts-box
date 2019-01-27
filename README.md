@@ -25,14 +25,15 @@ const boxedFetch = boxify(fetch);
 async function main() {
     const box = await boxedFetch("/api");
 
-    box.value; // TypeError! Cannot access the value before the error is handled
+    box.value; // Compile time type error
+    // Cannot access the value before the error is handled
 
     if (!box.ok) {
         console.log("Fetch failed", box.error);
         return;
     }
 
-    // The value can be now accessed when the error is handled
+    // The value can be now accessed because the error is handled
     console.log("Fetch ok!", box.value.status);
 }
 ```
@@ -41,6 +42,7 @@ Use `runBox()` to immediately execute a function with boxing
 
 ```ts
 import {runBox} from "ts-box";
+
 const jsonBox = runBox(() => box.value.json());
 if (jsonBox.ok) {
     // jsonBox.value...
@@ -59,8 +61,8 @@ const BoxifiedAxios = boxifyObject(Axios);
 ## The Return Type
 
 In TypeScript jargon the return type of a boxified function is always a
-discriminated union `ResultBox` with a common `ok` singleton property as the
-discriminant which can be used to narrow the type to the value or error.
+discriminated union `Box` with a common `ok` singleton property as the
+discriminant which can be used to narrow the type to the value or the error.
 
 ```ts
 type Box<T> = {ok: true; value: T} | {ok: false; error: any};
@@ -74,6 +76,6 @@ Read more about the TypeScript discriminated unions here:
 
 Q: Can I somehow type the error to other than `any`?
 
-A: No for the same reason the error is always `any` try-catch statements:
+A: No. For the same reason the error is always `any` try-catch statements:
 There's no way to guarantee the type of it since anything can throw at any
 point. You must use type guards to narrow the error type.
