@@ -1,9 +1,5 @@
 export type ResultBox<T> = {ok: true; value: T} | {ok: false; error: any};
 
-type BoxPromise<T> = T extends Promise<infer V>
-    ? ResultBox<Promise<V>>
-    : ResultBox<T>;
-
 /** Get the type wrapped in promise */
 type PromiseType<T> = T extends Promise<infer V> ? V : T;
 
@@ -54,8 +50,8 @@ function boxError<T>(error: T) {
 export function runBox<ReturnValue, Args extends any[]>(
     fn: (...args: Args) => ReturnValue | Promise<ReturnValue>,
     ...fnArgs: Args
-): BoxPromise<ReturnValue> {
-    type Ret = BoxPromise<ReturnValue>;
+): ResultBox<ReturnValue> {
+    type Ret = ResultBox<ReturnValue>;
 
     let res;
 
