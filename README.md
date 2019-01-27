@@ -63,7 +63,7 @@ discriminated union `ResultBox` with a common `ok` singleton property as the
 discriminant which can be used to narrow the type to the value or error.
 
 ```ts
-type ResultBox<T> = {ok: true; value: T} | {ok: false; error: any};
+type Box<T> = {ok: true; value: T} | {ok: false; error: any};
 ```
 
 Read more about the TypeScript discriminated unions here:

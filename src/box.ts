@@ -1,4 +1,4 @@
-export type ResultBox<T> = {ok: true; value: T} | {ok: false; error: any};
+export type Box<T> = {ok: true; value: T} | {ok: false; error: any};
 
 /** Get the type wrapped in promise */
 type PromiseType<T> = T extends Promise<infer V> ? V : T;
@@ -15,7 +15,7 @@ type WrapPromiseIf<FN extends (...args: any[]) => any, T> = FN extends (
 /** Put function return value in to a box */
 type BoxifyReturnType<FN extends (...args: any[]) => any> = WrapPromiseIf<
     FN,
-    ResultBox<PromiseType<ReturnType<FN>>>
+    Box<PromiseType<ReturnType<FN>>>
 >;
 
 /** Convert function to boxified function */
@@ -50,8 +50,8 @@ function boxError<T>(error: T) {
 export function runBox<ReturnValue, Args extends any[]>(
     fn: (...args: Args) => ReturnValue | Promise<ReturnValue>,
     ...fnArgs: Args
-): ResultBox<ReturnValue> {
-    type Ret = ResultBox<ReturnValue>;
+): Box<ReturnValue> {
+    type Ret = Box<ReturnValue>;
 
     let res;
 
